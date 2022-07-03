@@ -3,7 +3,7 @@ import rocket from './assets/rocket.svg'
 import clipboard from './assets/Clipboard.svg'
 import { PlusCircle } from 'phosphor-react'
 import { Button, InputField, Task, Badge } from "./components"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, InvalidEvent, useState } from "react"
 import classNames from "classnames"
 
 interface ITask {
@@ -17,6 +17,7 @@ function App() {
   const [tasks, setTasks] = useState<ITask[]>([])
 
   function handleInputFieldChange(event: ChangeEvent<HTMLInputElement>) {
+    event.target.setCustomValidity('')
     setTask(event.target.value)
   }
 
@@ -47,6 +48,10 @@ function App() {
     setTasks(newTasksArray)
   }
 
+  function handleInvalidInput(event: InvalidEvent<HTMLInputElement>) {
+    event.target.setCustomValidity('Este campo é obrigatório.')
+  }
+
   return (
     <div className={style.app}>
       <header>
@@ -66,8 +71,10 @@ function App() {
                 placeholder="Adicione uma tarefa"
                 value={task}
                 onChange={handleInputFieldChange}
+                onInvalid={handleInvalidInput}
+                required
               />
-              <Button type="submit">
+              <Button type="submit" disabled={task.trim() === ''}>
                 Criar
                 <PlusCircle />
               </Button>
