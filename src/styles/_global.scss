@@ -11,7 +11,7 @@ body, input, textarea, button {
 
 .container {
   margin: 0 auto;
-  padding: 15px;
-  width: 46rem;
+  padding: 0 15px;
+  width: calc(46rem + 30px);
   max-width: 100%;
 }
