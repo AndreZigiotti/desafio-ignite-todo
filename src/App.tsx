@@ -13,12 +13,17 @@ interface ITask {
 }
 
 function App() {
-  const [task, setTask] = useState('')
-  const [tasks, setTasks] = useState<ITask[]>([])
+  const storageKey = 'tasks_list'
+  const storageData = JSON.parse(localStorage.getItem(storageKey) || '[]')
 
-  function handleInputFieldChange(event: ChangeEvent<HTMLInputElement>) {
-    event.target.setCustomValidity('')
-    setTask(event.target.value)
+  const [task, setTask] = useState('')
+  const [tasks, setTasks] = useState<ITask[]>(storageData)
+
+  function refreshTaskList(taskList: ITask[]) {
+    setTasks(state => {
+      localStorage.setItem(storageKey, JSON.stringify(taskList))
+      return taskList
+    })
   }
 
   function addTask(event: FormEvent) {
@@ -30,7 +35,8 @@ function App() {
       isDone: false
     }
 
-    setTasks(state => [...state, newTask])
+    const newList = [...tasks, newTask]
+    refreshTaskList(newList)
     setTask('')
   }
 
@@ -38,14 +44,19 @@ function App() {
     const newTasksArray = [...tasks]
     newTasksArray.splice(indexOfTaskToDelete, 1)
 
-    setTasks(newTasksArray)
+    refreshTaskList(newTasksArray)
   }
 
   function completeTask(indexOfTaskToComplete: number) {
     const newTasksArray = [...tasks]
     newTasksArray[indexOfTaskToComplete].isDone = !newTasksArray[indexOfTaskToComplete].isDone
 
-    setTasks(newTasksArray)
+    refreshTaskList(newTasksArray)
+  }
+
+  function handleInputFieldChange(event: ChangeEvent<HTMLInputElement>) {
+    event.target.setCustomValidity('')
+    setTask(event.target.value)
   }
 
   function handleInvalidInput(event: InvalidEvent<HTMLInputElement>) {
