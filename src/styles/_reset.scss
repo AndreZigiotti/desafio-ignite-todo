@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  -webkit-font-smooth: antialiased;
+}
+
+body, input, textarea, button {
+  line-height: 1rem;
+}
+
+button {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+}
